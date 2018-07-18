@@ -6,7 +6,6 @@
                     <h1>Выбраны {{ countCheckedList }} оттенка</h1>
                 </div>
                 <div class="web__form">
-
                     <div class="web__form--content">
                         <div class="web__form--content_item web__form--color">
                             <div class="web__form--header">Цвет</div>
@@ -15,7 +14,7 @@
                         <div class="web__form--content_groups">
                             <div class="web__content--headers">
                                 <div class="web__content--header web__form--shade">
-                                    <checkbox @change='toggleSelect' v-model='isCheckAll'/>
+                                    <checkbox v-model='isCheckAll'/>
                                     Оттенок
                                 </div>
                                 <div class="web__content--header web__form--scope">Объем</div>
@@ -30,15 +29,18 @@
                 </div>
             </div>
             <div class="web__right">
-                <ul>
-                    <li>
-                        <a href="#">Состав заказа</a>
+                <ul class="web__menu">
+                    <li class="web__link">
+                        <a href="#" @click.prevent="state = 'main'" :class="{active:state === 'main'}" class="web__link--item">Состав заказа</a>
                     </li>
-                    <li>
-                        <a href="#">Комментарий</a>
+                    <li class="web__link">
+                        <a href="#" @click.prevent="state = 'comment'" :class="{active:state === 'comment'}" class="web__link--item">Комментарий</a>
                     </li>
-                    <li>
-                        <a href="#">Контактное лицо</a>
+                    <li class="web__link">
+                        <a href="#" @click.prevent="state = 'contact'" :class="{active:state === 'contact'}" class="web__link--item">Контактное лицо</a>
+                    </li>
+                    <li class="web__link">
+                        <button class="web__link--button">Отправить</button>
                     </li>
                 </ul>
             </div>
@@ -54,6 +56,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
+      state: 'main',
       isCheckAll: false,
       shades: {
         0: 'Небесный',
@@ -72,21 +75,21 @@ export default {
           shade: 1,
           scoped: 1
         }
-      ],
-      msg: 'Welcome to Your Vue.js App'
+      ]
     }
   },
   components: {
     Item,
     Checkbox
   },
-  methods: {
-    toggleSelect () {
-      this.isCheckAll = !this.isCheckAll
+  watch: {
+    isCheckAll (value) {
       this.lists.forEach((item) => {
-        item.checked = this.isCheckAll
+        item.checked = value
       })
-    },
+    }
+  },
+  methods: {
     addShade () {
       this.lists.push(
         {
@@ -111,7 +114,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="sass">
 a
     text-decoration: none
@@ -130,6 +132,9 @@ a
 
 .hello
     width: 2000px
+select
+    appearance: none
+    background: url(../assets/arrow.png) no-repeat 98% center
 
 .input
     border: 4px solid #d7d7d7
@@ -149,7 +154,48 @@ a
         max-width: 1380px
         flex: 0 0 1380px
     &__right
+        border-left: 5px dotted #e37458
+        margin-left: 76px
+        margin-top: 16px
         flex: 1
+    &__menu
+        padding-left: 72px
+    &__link
+        list-style: none
+
+        &--button
+            border-radius: 8px
+            background-image: linear-gradient(90deg, rgb(241,163,78) 0%, rgb(241,177,107) 100%)
+            box-shadow: 0 5px 10px 0 rgba(241, 163, 80, 0.45)
+            color: #fff
+            font-size: 44px
+            padding: 30px 51px
+            margin-top: 33px
+            border: none
+            cursor: pointer
+            &:hover
+                background-image: linear-gradient(90deg, darken(rgb(241,163,78),15%) 0%, darken(rgb(241,177,107),25%) 100%)
+
+        &--item
+            font-size: 36px
+            color: #000
+            padding-top: 13px
+            margin-bottom: 18px
+            display: inline-block
+            border-bottom: 2px dotted rgba(#000,.3)
+            position: relative
+            &.active
+             color: #dc7300
+             border-color: transparent
+             &:before
+                 content: ''
+                 background-image: url("../assets/active_menu.png")
+                 width: 25px
+                 height: 19px
+                 position: absolute
+                 left: -34px
+                 top: 25px
+
     &__button
         color: #e37458
         font-size: 32px
